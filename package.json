@@ -8,5 +8,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "[![Actions Status](https://github.com/ivansneg2015/js-react-developer-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ivansneg2015/js-react-developer-project-12/actions)"
+  "description": "[![Actions Status](https://github.com/ivansneg2015/js-react-developer-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ivansneg2015/js-react-developer-project-12/actions)",
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.3"
+  }
 }

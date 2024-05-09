@@ -10,9 +10,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/purple-jabba"
+    "url": "https://github.com/ivansneg2015/js-react-developer-project-12"
   },
-  "author": "Denis Karnafel",
+  "author": "Maxim Seleznev",
   "license": "ISC",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.3"

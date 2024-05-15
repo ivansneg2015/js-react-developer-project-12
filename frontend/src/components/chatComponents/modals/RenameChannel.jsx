@@ -32,7 +32,7 @@ const RenameChannelComponent = () => {
 
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName, // Устанавливаем текущее название канала как начальное значение
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -101,4 +101,3 @@ const RenameChannelComponent = () => {
 };
 
 export default RenameChannelComponent;
-

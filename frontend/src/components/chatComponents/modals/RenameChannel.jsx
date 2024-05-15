@@ -28,10 +28,11 @@ const RenameChannelComponent = () => {
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
+  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: '',
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()

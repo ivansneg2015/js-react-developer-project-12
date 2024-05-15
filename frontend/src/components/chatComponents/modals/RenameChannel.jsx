@@ -32,7 +32,7 @@ const RenameChannelComponent = () => {
 
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName,
+      channelName: currentChannelName, // Устанавливаем текущее название канала как начальное значение
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -82,6 +82,8 @@ const RenameChannelComponent = () => {
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
+              autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна
+              onFocus={(e) => e.target.select()} // Выделяем текст в поле ввода при получении фокуса
             />
             <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">
@@ -94,9 +96,9 @@ const RenameChannelComponent = () => {
           </Form.Group>
         </Form>
       </Modal.Body>
-
     </Modal>
   );
 };
 
 export default RenameChannelComponent;
+

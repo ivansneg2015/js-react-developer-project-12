@@ -1,50 +1,36 @@
+import React, { useEffect, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useEffect, useRef } from 'react'; // Импортируем useRef
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import {
-  useModal,
-  useSelectedChannel,
-  useChannels,
-} from '../../../hooks/hooks';
-import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
+import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
 
-const RenameChannelComponent = () => {
+const RenameChannelComponent = ({ currentChannelName }) => { // Передаем текущее название канала как пропс
   const { t } = useTranslation();
-  const modal = useModal();
-  const selectedChannel = useSelectedChannel();
-  const channels = useChannels();
   const dispatch = useDispatch();
-  const addChannelRef = useRef(); // Создаем реф для доступа к полю ввода
+  const addChannelRef = useRef();
 
   useEffect(() => {
-    addChannelRef.current.focus(); // Устанавливаем фокус на поле ввода при открытии модального окна
-    addChannelRef.current.select(); // Выделяем текст в поле ввода при открытии модального окна
-  }, []); // Пустой массив зависимостей означает, что этот эффект будет вызываться только один раз, при монтировании компонента
+    addChannelRef.current.focus();
+  }, []);
 
   const [editChannel] = useEditChannelMutation();
 
-  const channelsNames = channels.data.map((channel) => channel.name);
-  const currentChannelName = selectedChannel.name;
-
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName,
+      channelName: currentChannelName, // Устанавливаем текущее название как начальное значение
     },
     validationSchema: yup.object({
-      channelName: yup
-        .string()
+      channelName: yup.string()
         .trim()
         .required(t('yup.required'))
         .min(3, t('yup.minAndMax'))
-        .max(20, t('yup.minAndMax'))
-        .notOneOf([...channelsNames], t('yup.notOneOf')),
+        .max(20, t('yup.minAndMax')),
     }),
     onSubmit: async (values) => {
       try {
@@ -55,14 +41,9 @@ const RenameChannelComponent = () => {
         };
         editChannel(newChannel);
         dispatch(closeModal());
-        if (selectedChannel.currentChannelId.toString() === modal.id) {
-          dispatch(
-            selectCurrentChannel({
-              id: selectedChannel.currentChannelId,
-              name: values.channelName,
-            }),
-          );
-        }
+        dispatch(
+          selectCurrentChannel({ id: selectedChannel.currentChannelId, name: values.channelName }),
+        );
         toast.success(t('toastify.renameChannel'));
       } catch (e) {
         toast.error(t('toastify.loadingError'));
@@ -90,24 +71,13 @@ const RenameChannelComponent = () => {
               autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна
               onFocus={(e) => e.target.select()} // Выделяем текст в поле ввода при получении фокуса
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">
-              {t('modals.channelName')}
-            </Form.Label>
+            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.channelName}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
-              <Button
-                className="me-2"
-                variant="secondary"
-                type="button"
-                onClick={() => dispatch(closeModal())}
-              >
-                {t('cancel')}
-              </Button>
-              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>
-                {t('send')}
-              </Button>
+              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>

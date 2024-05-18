@@ -85,7 +85,6 @@ const RenameChannelComponent = () => {
               required=""
               onChange={formik.handleChange}
               value={formik.values.channelName}
-              defaultValue={currentChannelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
               autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна

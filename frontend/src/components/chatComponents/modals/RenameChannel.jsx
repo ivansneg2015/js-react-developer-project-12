@@ -19,7 +19,7 @@ const RenameChannelComponent = () => {
   const selectedChannel = useSelectedChannel();
   const channels = useChannels();
   const dispatch = useDispatch();
-  const inputRef = useRef(null); // Исправленное определение inputRef
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (modal.isOpen) {
@@ -56,7 +56,10 @@ const RenameChannelComponent = () => {
         dispatch(closeModal());
         if (selectedChannel.currentChannelId.toString() === modal.id) {
           dispatch(
-            selectCurrentChannel({ id: selectedChannel.currentChannelId, name: values.channelName }),
+            selectCurrentChannel({
+              id: selectedChannel.currentChannelId,
+              name: values.channelName,
+            }),
           );
         }
         toast.success(t('toastify.renameChannel'));
@@ -86,13 +89,24 @@ const RenameChannelComponent = () => {
               autoFocus
               onFocus={(e) => e.target.select()}
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
+            <Form.Label htmlFor="channelName" className="visually-hidden">
+              {t('modals.channelName')}
+            </Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.channelName}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
-              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit">{t('send')}</Button>
+              <Button
+                className="me-2"
+                variant="secondary"
+                type="button"
+                onClick={() => dispatch(closeModal())}
+              >
+                {t('cancel')}
+              </Button>
+              <Button variant="primary" type="submit">
+                {t('send')}
+              </Button>
             </div>
           </Form.Group>
         </Form>

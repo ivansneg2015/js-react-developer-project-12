@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -6,7 +6,9 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import { useModal, useChannels, useSelectedChannel } from '../../../hooks/hooks';
+import {
+  useModal, useChannels, useSelectedChannel,
+} from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
@@ -17,20 +19,23 @@ const RenameChannelComponent = () => {
   const selectedChannel = useSelectedChannel();
   const channels = useChannels();
   const dispatch = useDispatch();
-  const inputRef = useRef();
+  const inputRef = useRef(null); // Исправленное определение inputRef
 
   useEffect(() => {
-    inputRef.current.focus();
-    inputRef.current.select();
-  }, []);
+    if (modal.isOpen) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [modal.isOpen]);
 
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
+  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: selectedChannel.name,
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -40,7 +45,7 @@ const RenameChannelComponent = () => {
         .max(20, t('yup.minAndMax'))
         .notOneOf(channelsNames, t('yup.notOneOf')),
     }),
-    onSubmit: async (values, formikData) => {
+    onSubmit: async (values) => {
       try {
         const clearedName = leoProfanity.clean(values.channelName);
         const newChannel = {

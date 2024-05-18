@@ -1,17 +1,23 @@
-import React, { useEffect, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import { closeModal } from '../../../slices/modalSlice.js';
+import {
+  useModal, useChannels, useSelectedChannel,
+} from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
+import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
 
-const RenameChannelComponent = ({ currentChannelName }) => { // Передаем текущее название канала как пропс
+const RenameChannelComponent = () => {
   const { t } = useTranslation();
+  const modal = useModal();
+  const selectedChannel = useSelectedChannel();
+  const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
 
@@ -21,16 +27,20 @@ const RenameChannelComponent = ({ currentChannelName }) => { // Передаем
 
   const [editChannel] = useEditChannelMutation();
 
+  const channelsNames = channels.data.map((channel) => channel.name);
+  const currentChannelName = selectedChannel.name;
+
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName, // Устанавливаем текущее название как начальное значение
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()
         .trim()
         .required(t('yup.required'))
         .min(3, t('yup.minAndMax'))
-        .max(20, t('yup.minAndMax')),
+        .max(20, t('yup.minAndMax'))
+        .notOneOf([...channelsNames], t('yup.notOneOf')),
     }),
     onSubmit: async (values) => {
       try {
@@ -41,9 +51,13 @@ const RenameChannelComponent = ({ currentChannelName }) => { // Передаем
         };
         editChannel(newChannel);
         dispatch(closeModal());
-        dispatch(
-          selectCurrentChannel({ id: selectedChannel.currentChannelId, name: values.channelName }),
-        );
+        if (selectedChannel.currentChannelId.toString() === modal.id) {
+          dispatch(
+            selectCurrentChannel(
+              { id: selectedChannel.currentChannelId, name: values.channelName },
+            ),
+          );
+        }
         toast.success(t('toastify.renameChannel'));
       } catch (e) {
         toast.error(t('toastify.loadingError'));
@@ -66,6 +80,7 @@ const RenameChannelComponent = ({ currentChannelName }) => { // Передаем
               required=""
               onChange={formik.handleChange}
               value={formik.values.channelName}
+              defaultValue={currentChannelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
               autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна

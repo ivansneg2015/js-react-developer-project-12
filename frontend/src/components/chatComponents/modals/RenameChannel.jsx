@@ -63,10 +63,11 @@ const RenameChannelComponent = () => {
 
   useEffect(() => {
     if (modal.isOpen && inputRef.current) {
+      formik.setFieldValue('channelName', selectedChannel.name);
       inputRef.current.focus();
       inputRef.current.select();
     }
-  }, [modal.isOpen, selectedChannel.name]);
+  }, [modal.isOpen, selectedChannel.name, formik]);
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>

@@ -33,11 +33,10 @@ const RenameChannelComponent = () => {
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
-  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName,
+      channelName: selectedChannel.name,
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -96,7 +95,7 @@ const RenameChannelComponent = () => {
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
+              <Button variant="primary" type="submit">{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>

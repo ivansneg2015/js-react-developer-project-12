@@ -6,9 +6,7 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import {
-  useModal, useChannels, useSelectedChannel,
-} from '../../../hooks/hooks';
+import { useModal, useChannels, useSelectedChannel } from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';

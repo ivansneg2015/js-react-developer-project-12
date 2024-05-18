@@ -1,14 +1,12 @@
+import React, { useEffect, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import {
-  useModal, useChannels, useSelectedChannel,
-} from '../../../hooks/hooks';
+import { useModal, useChannels, useSelectedChannel } from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
@@ -22,7 +20,14 @@ const RenameChannelComponent = () => {
   const addChannelRef = useRef();
 
   useEffect(() => {
-    addChannelRef.current.focus();
+    // Получаем элемент input по его ref
+    const inputElement = addChannelRef.current;
+
+    // Устанавливаем фокус на input
+    inputElement.focus();
+
+    // Выделяем текст в input
+    inputElement.setSelectionRange(0, inputElement.value.length);
   }, []);
 
   const [editChannel] = useEditChannelMutation();

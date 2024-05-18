@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import { useModal, useChannels, useSelectedChannel } from '../../../hooks/hooks';
+import {
+  useModal, useChannels, useSelectedChannel,
+} from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
@@ -18,21 +20,19 @@ const RenameChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
-  const submitBtnRef = useRef();
-  const inputRef = useRef();
 
   useEffect(() => {
-    inputRef.current.focus();
-    inputRef.current.select();
+    addChannelRef.current.focus();
   }, []);
 
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
+  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: selectedChannel.name,
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -42,7 +42,7 @@ const RenameChannelComponent = () => {
         .max(20, t('yup.minAndMax'))
         .notOneOf([...channelsNames], t('yup.notOneOf')),
     }),
-    onSubmit: async (values, formikData) => {
+    onSubmit: async (values) => {
       try {
         const clearedName = leoProfanity.clean(values.channelName);
         const newChannel = {
@@ -80,8 +80,9 @@ const RenameChannelComponent = () => {
               required=""
               onChange={formik.handleChange}
               value={formik.values.channelName}
+              defaultValue={currentChannelName}
               isInvalid={!!formik.errors.channelName}
-              ref={inputRef}
+              ref={addChannelRef}
               autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна
               onFocus={(e) => e.target.select()} // Выделяем текст в поле ввода при получении фокуса
             />
@@ -91,7 +92,7 @@ const RenameChannelComponent = () => {
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button ref={submitBtnRef} variant="primary" type="submit">{t('send')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>

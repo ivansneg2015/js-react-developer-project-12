@@ -21,21 +21,13 @@ const RenameChannelComponent = () => {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (modal.isOpen) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [modal.isOpen]);
-
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
-  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: currentChannelName,
+      channelName: selectedChannel.name || '',
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -68,6 +60,13 @@ const RenameChannelComponent = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (modal.isOpen && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [modal.isOpen, selectedChannel.name]);
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>

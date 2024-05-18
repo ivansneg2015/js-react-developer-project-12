@@ -72,7 +72,7 @@ const RenameChannelComponent = () => {
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
       <Modal.Header closeButton>
-        <Modal.Title h4="true">{t('modals.renameChannel')}</Modal.Title>
+        <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -81,7 +81,7 @@ const RenameChannelComponent = () => {
               className="mb-2"
               id="channelName"
               name="channelName"
-              required=""
+              required
               onChange={formik.handleChange}
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}

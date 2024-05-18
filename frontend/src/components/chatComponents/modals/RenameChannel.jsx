@@ -18,16 +18,12 @@ const RenameChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
+  const submitBtnRef = useRef();
+  const inputRef = useRef();
 
   useEffect(() => {
-    // Получаем элемент input по его ref
-    const inputElement = addChannelRef.current;
-
-    // Устанавливаем фокус на input
-    inputElement.focus();
-
-    // Выделяем текст в input
-    inputElement.setSelectionRange(0, inputElement.value.length);
+    inputRef.current.focus();
+    inputRef.current.select();
   }, []);
 
   const [editChannel] = useEditChannelMutation();
@@ -46,7 +42,7 @@ const RenameChannelComponent = () => {
         .max(20, t('yup.minAndMax'))
         .notOneOf([...channelsNames], t('yup.notOneOf')),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values, formikData) => {
       try {
         const clearedName = leoProfanity.clean(values.channelName);
         const newChannel = {
@@ -85,7 +81,7 @@ const RenameChannelComponent = () => {
               onChange={formik.handleChange}
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}
-              ref={addChannelRef}
+              ref={inputRef}
               autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна
               onFocus={(e) => e.target.select()} // Выделяем текст в поле ввода при получении фокуса
             />
@@ -95,7 +91,7 @@ const RenameChannelComponent = () => {
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit">{t('send')}</Button>
+              <Button ref={submitBtnRef} variant="primary" type="submit">{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>

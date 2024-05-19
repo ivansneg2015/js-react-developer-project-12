@@ -1,14 +1,12 @@
 const apiPath = '/api/v1';
 
-const apiRoutes = {
-  loginPath: () => `${apiPath}/login`,
-  messagesPath: () => `${apiPath}/messages`,
-  channelsPath: () => `${apiPath}/channels`,
-  signUpPath: () => `${apiPath}/signup`,
-  loginPage: '/login',
-  signUpPage: '/signup',
-  chatPage: '/',
-  notFoundPage: '*',
+export default {
+  loginPath: () => [apiPath, 'login'].join('/'),
+  messagesPath: () => [apiPath, 'messages'].join('/'),
+  channelsPath: () => [apiPath, 'channels'].join('/'),
+  signUpPath: () => [apiPath, 'signup'].join('/'),
+  loginPage: () => '/login',
+  signUpPage: () => '/signup',
+  chatPage: () => '/',
+  notFoundPage: () => '*',
 };
-
-export default apiRoutes;

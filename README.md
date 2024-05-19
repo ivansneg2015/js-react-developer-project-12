@@ -10,13 +10,7 @@
 
 ## **Description:**
 The final Hexlet training project. A simple version of Slack chat. Allows a different number of users to exchange messages. supports exchange across multiple channels.
-## To run locally on your machine (Node.js and npm required)
-```bash
-  git clone https://github.com/ivansneg2015/js-react-developer-project-12
-  make install
-  make build
-  make local-start
-```
+
  ## **Using technologies:**
  1. React
  2. React-bootstrap

@@ -1,10 +1,11 @@
 const apiPath = '/api/v1';
+const joinPath = (endpoint) => `${apiPath}/${endpoint}`;
 
 export default {
-  loginPath: () => [apiPath, 'login'].join('/'),
-  messagesPath: () => [apiPath, 'messages'].join('/'),
-  channelsPath: () => [apiPath, 'channels'].join('/'),
-  signUpPath: () => [apiPath, 'signup'].join('/'),
+  loginPath: () => joinPath('login'),
+  messagesPath: () => joinPath('messages'),
+  channelsPath: () => joinPath('channels'),
+  signUpPath: () => joinPath('signup'),
   loginPage: () => '/login',
   signUpPage: () => '/signup',
   chatPage: () => '/',

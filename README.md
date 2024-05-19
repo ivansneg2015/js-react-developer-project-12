@@ -5,7 +5,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a761f1869fa461dcc5b4/maintainability)](https://codeclimate.com/github/IVANn84/frontend-project-12/maintainability)
 
 ### Example using Application:
-[Project Chat link](https://js-react-developer-project-12-3vth.onrender.com)
+[Project Chat link](https://slack-project-85e7.onrender.com/)
 
 # Chat Hexlet:
 

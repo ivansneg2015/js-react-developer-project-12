@@ -32,6 +32,8 @@ const RenameChannelComponent = () => {
 
   const channelsNames = channels.data.map((channel) => channel.name);
   const currentChannelName = selectedChannel.name;
+  // Логирование значения currentChannelName для проверки
+  console.log('Current Channel Name:', currentChannelName);
 
   const formik = useFormik({
     initialValues: {

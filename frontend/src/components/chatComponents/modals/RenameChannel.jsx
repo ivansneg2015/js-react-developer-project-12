@@ -6,9 +6,7 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
-import {
-  useModal, useChannels, useSelectedChannel,
-} from '../../../hooks/hooks';
+import { useModal, useChannels, useSelectedChannel } from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
@@ -52,7 +50,7 @@ const RenameChannelComponent = () => {
       try {
         const clearedName = leoProfanity.clean(values.channelName);
         const newChannel = {
-          id: modal.id,
+          id: selectedChannel.currentChannelId, 
           body: { name: clearedName },
         };
         await editChannel(newChannel);
@@ -73,7 +71,7 @@ const RenameChannelComponent = () => {
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
       <Modal.Header closeButton>
-        <Modal.Title h4="true">{t('modals.renameChannel')}</Modal.Title>
+        <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -82,7 +80,7 @@ const RenameChannelComponent = () => {
               className="mb-2"
               id="channelName"
               name="channelName"
-              required=""
+              required
               onChange={formik.handleChange}
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}

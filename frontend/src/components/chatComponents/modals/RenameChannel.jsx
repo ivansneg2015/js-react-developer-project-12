@@ -31,9 +31,6 @@ const RenameChannelComponent = () => {
   const channelsNames = channels.data.map((channel) => channel.name);
   const currentChannelName = selectedChannel.name;
 
-  // Логирование значения currentChannelName для проверки
-  console.log('Current Channel Name:', currentChannelName);
-
   const formik = useFormik({
     initialValues: {
       channelName: currentChannelName,
@@ -50,7 +47,7 @@ const RenameChannelComponent = () => {
       try {
         const clearedName = leoProfanity.clean(values.channelName);
         const newChannel = {
-          id: selectedChannel.currentChannelId, 
+          id: selectedChannel.currentChannelId,
           body: { name: clearedName },
         };
         await editChannel(newChannel);
@@ -87,6 +84,8 @@ const RenameChannelComponent = () => {
               ref={inputRef}
               autoFocus
               onFocus={(e) => e.target.select()}
+              // Установить начальное значение и выделить текст
+              defaultValue={currentChannelName}
             />
             <Form.Label htmlFor="channelName" className="visually-hidden">
               {t('modals.channelName')}

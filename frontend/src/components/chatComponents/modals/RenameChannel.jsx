@@ -19,13 +19,21 @@ const RenameChannelComponent = () => {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    if (modal.isOpen) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [modal.isOpen]);
+
   const [editChannel] = useEditChannelMutation();
 
   const channelsNames = channels.data.map((channel) => channel.name);
+  const currentChannelName = selectedChannel.name;
 
   const formik = useFormik({
     initialValues: {
-      channelName: selectedChannel.name || '',
+      channelName: currentChannelName,
     },
     validationSchema: yup.object({
       channelName: yup.string()
@@ -46,10 +54,7 @@ const RenameChannelComponent = () => {
         dispatch(closeModal());
         if (selectedChannel.currentChannelId.toString() === modal.id) {
           dispatch(
-            selectCurrentChannel({
-              id: selectedChannel.currentChannelId,
-              name: values.channelName,
-            }),
+            selectCurrentChannel({ id: selectedChannel.currentChannelId, name: values.channelName }),
           );
         }
         toast.success(t('toastify.renameChannel'));
@@ -59,18 +64,10 @@ const RenameChannelComponent = () => {
     },
   });
 
-  useEffect(() => {
-    if (modal.isOpen && inputRef.current) {
-      formik.setFieldValue('channelName', selectedChannel.name);
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [modal.isOpen, selectedChannel.name, formik]);
-
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
       <Modal.Header closeButton>
-        <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
+        <Modal.Title h4="true">{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -79,7 +76,7 @@ const RenameChannelComponent = () => {
               className="mb-2"
               id="channelName"
               name="channelName"
-              required
+              required=""
               onChange={formik.handleChange}
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}
@@ -87,24 +84,13 @@ const RenameChannelComponent = () => {
               autoFocus
               onFocus={(e) => e.target.select()}
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">
-              {t('modals.channelName')}
-            </Form.Label>
+            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.channelName}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
-              <Button
-                className="me-2"
-                variant="secondary"
-                type="button"
-                onClick={() => dispatch(closeModal())}
-              >
-                {t('cancel')}
-              </Button>
-              <Button variant="primary" type="submit">
-                {t('send')}
-              </Button>
+              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
+              <Button variant="primary" type="submit">{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>

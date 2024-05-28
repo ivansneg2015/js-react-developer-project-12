@@ -20,17 +20,19 @@ const RenameChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
-  console.log(selectedChannel);
-  console.log(channels);
 
   useEffect(() => {
-    addChannelRef.current.focus();
-  }, []);
+    console.log('useEffect: selectedChannel', selectedChannel);
+    console.log('useEffect: channels', channels);
+    if (addChannelRef.current) {
+      addChannelRef.current.focus();
+    }
+  }, [selectedChannel, channels]);
 
   const [editChannel] = useEditChannelMutation();
   console.log([editChannel]);
-  const channelsNames = channels.data.map((channel) => channel.name);
-  const currentChannelName = selectedChannel.name;
+  const channelsNames = channels.data ? channels.data.map((channel) => channel.name) : [];
+  const currentChannelName = selectedChannel ? selectedChannel.name : '';
 
   const formik = useFormik({
     initialValues: {
@@ -51,7 +53,7 @@ const RenameChannelComponent = () => {
           id: modal.id,
           body: { name: clearedName },
         };
-        editChannel(newChannel);
+        await editChannel(newChannel).unwrap();
         dispatch(closeModal());
         if (selectedChannel.currentChannelId.toString() === modal.id) {
           dispatch(
@@ -66,6 +68,12 @@ const RenameChannelComponent = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (selectedChannel) {
+      formik.setValues({ channelName: selectedChannel.name });
+    }
+  }, [selectedChannel]);
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
@@ -85,8 +93,8 @@ const RenameChannelComponent = () => {
               defaultValue={currentChannelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
-              autoFocus // Устанавливаем фокус на поле ввода при открытии модального окна
-              onFocus={(e) => e.target.select()} // Выделяем текст в поле ввода при получении фокуса
+              autoFocus
+              onFocus={(e) => e.target.select()}
             />
             <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">

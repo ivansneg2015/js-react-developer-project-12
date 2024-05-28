@@ -13,20 +13,22 @@ import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
 
-const RenameChannelComponent = (props) => {
+const RenameChannelComponent = () => {
   const { t } = useTranslation();
   const modal = useModal();
   const selectedChannel = useSelectedChannel();
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
-  console.log(props);
+  console.log(selectedChannel);
+  console.log(channels);
+
   useEffect(() => {
     addChannelRef.current.focus();
   }, []);
 
   const [editChannel] = useEditChannelMutation();
-
+  console.log([editChannel]);
   const channelsNames = channels.data.map((channel) => channel.name);
   const currentChannelName = selectedChannel.name;
 

@@ -73,7 +73,7 @@ const RenameChannelComponent = () => {
     if (selectedChannel) {
       formik.setValues({ channelName: selectedChannel.name });
     }
-  }, [selectedChannel]);
+  }, [selectedChannel, formik]);
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>

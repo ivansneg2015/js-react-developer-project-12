@@ -3,11 +3,8 @@ import socket from './socket';
 
 export const SocketContext = createContext();
 
-export const SocketProvider = ({ children }) => {
-  return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
-  );
-};
-
+export const SocketProvider = ({ children }) => (
+  <SocketContext.Provider value={socket}>
+    {children}
+  </SocketContext.Provider>
+);

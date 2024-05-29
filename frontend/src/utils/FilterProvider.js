@@ -1,4 +1,3 @@
-// src/utils/FilterProvider.js
 import React, { createContext, useContext, useCallback } from 'react';
 import leoProfanity from 'leo-profanity';
 
@@ -14,6 +13,4 @@ export const FilterProvider = ({ children }) => {
   );
 };
 
-export const useFilter = () => {
-  return useContext(FilterContext);
-};
+export const useFilter = () => useContext(FilterContext);

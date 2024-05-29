@@ -9,7 +9,7 @@ import { useModal, useChannels } from '../../../hooks/hooks';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useAddChannelMutation } from '../../../services/channelsApi.js';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
-import { useFilter } from '../../../utils/FilterProvider.js';
+import { useFilter,FilterProvider } from '../../../utils/FilterProvider.js';
 
 const AddChannelComponent = () => {
   const { t } = useTranslation();
@@ -57,6 +57,7 @@ const AddChannelComponent = () => {
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
+     <FilterProvider>
       <Modal.Header closeButton>
         <Modal.Title>{t('modals.addChannel')}</Modal.Title>
       </Modal.Header>
@@ -94,6 +95,7 @@ const AddChannelComponent = () => {
           </Form.Group>
         </Form>
       </Modal.Body>
+      </FilterProvider>
     </Modal>
   );
 };

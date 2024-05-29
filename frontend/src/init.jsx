@@ -12,6 +12,7 @@ import { addNewMesage } from './slices/messagesSlice';
 import {
   addNewChannel, deleteChannel, renameChannel, selectCurrentChannel, selectDefaultChannel,
 } from './slices/channelsSlice.js';
+import { FilterProvider } from './utils/FilterProvider.js';
 
 const init = async () => {
   const i18n = i18next.createInstance();
@@ -63,8 +64,10 @@ const init = async () => {
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
+          <FilterProvider>
             <App />
             <Modal />
+            </FilterProvider>
           </Provider>
         </I18nextProvider>
       </ErrorBoundary>

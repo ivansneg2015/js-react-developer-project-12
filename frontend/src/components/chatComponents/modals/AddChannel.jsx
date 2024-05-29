@@ -17,8 +17,8 @@ const AddChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
-  
-useEffect(() => {
+
+  useEffect(() => {
     addChannelRef.current.focus();
   }, []);
 

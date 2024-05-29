@@ -1,5 +1,4 @@
 import React from 'react';
-import { io } from 'socket.io-client';
 import i18next from 'i18next';
 import leoProfanity from 'leo-profanity';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -8,15 +7,13 @@ import { Provider as RollBar, ErrorBoundary } from '@rollbar/react';
 import store from './slices/index.js';
 import App from './components/App';
 import resources from './locales/index.js';
+import { SocketProvider } from './SocketProvider';
 import Modal from './components/chatComponents/modals/Modal.jsx';
 import { addNewMesage } from './slices/messagesSlice';
 import {
   addNewChannel, deleteChannel, renameChannel, selectCurrentChannel, selectDefaultChannel,
 } from './slices/channelsSlice.js';
-
-const socket = io();
-
-export const SocketContext = React.createContext();
+import socket from './socket';
 
 const init = async () => {
   const i18n = i18next.createInstance();
@@ -68,10 +65,10 @@ const init = async () => {
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <SocketContext.Provider value={socket}>
+            <SocketProvider>
               <App />
               <Modal />
-            </SocketContext.Provider>
+            </SocketProvider>
           </Provider>
         </I18nextProvider>
       </ErrorBoundary>

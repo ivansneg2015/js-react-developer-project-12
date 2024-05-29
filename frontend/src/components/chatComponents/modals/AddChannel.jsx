@@ -5,11 +5,11 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import leoProfanity from 'leo-profanity';
 import { useModal, useChannels } from '../../../hooks/hooks';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useAddChannelMutation } from '../../../services/channelsApi.js';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
+import { useFilter } from '../../FilterProvider';
 
 const AddChannelComponent = () => {
   const { t } = useTranslation();
@@ -17,6 +17,7 @@ const AddChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
+  const filter = useFilter();
 
   useEffect(() => {
     addChannelRef.current.focus();
@@ -40,7 +41,7 @@ const AddChannelComponent = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const clearedName = leoProfanity.clean(values.channelName);
+        const clearedName = filter(values.channelName);
         const newChannel = {
           body: { name: clearedName },
         };
@@ -83,7 +84,6 @@ const AddChannelComponent = () => {
           </Form.Group>
         </Form>
       </Modal.Body>
-
     </Modal>
   );
 };

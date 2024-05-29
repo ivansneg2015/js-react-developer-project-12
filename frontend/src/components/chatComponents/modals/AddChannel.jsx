@@ -9,7 +9,7 @@ import { useModal, useChannels } from '../../../hooks/hooks';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useAddChannelMutation } from '../../../services/channelsApi.js';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
-import { useFilter } from '../../FilterProvider';
+import { useFilter } from '../../../utils/FilterProvider.js';
 
 const AddChannelComponent = () => {
   const { t } = useTranslation();

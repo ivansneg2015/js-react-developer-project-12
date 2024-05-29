@@ -9,5 +9,4 @@ export default {
   loginPage: () => '/login',
   signUpPage: () => '/signup',
   chatPage: () => '/',
-  notFoundPage: () => '*',
 };

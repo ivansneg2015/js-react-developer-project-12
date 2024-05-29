@@ -8,7 +8,7 @@ import App from './components/App';
 import resources from './locales/index.js';
 import socket from './socket.js';
 import Modal from './components/chatComponents/modals/Modal.jsx';
-import { addNewMesage } from './slices/messagesSlice';
+import { addNewMessage } from './slices/messagesSlice';
 import {
   addNewChannel, deleteChannel, renameChannel, selectCurrentChannel, selectDefaultChannel,
 } from './slices/channelsSlice.js';
@@ -26,7 +26,7 @@ const init = async () => {
     });
 
   socket.on('newMessage', (payload) => {
-    dispatch(addNewMesage(payload));
+    dispatch(addNewMessage(payload));
   });
 
   socket.on('newChannel', (payload) => {
@@ -64,9 +64,9 @@ const init = async () => {
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-          <FilterProvider>
-            <App />
-            <Modal />
+            <FilterProvider>
+              <App />
+              <Modal />
             </FilterProvider>
           </Provider>
         </I18nextProvider>

@@ -9,7 +9,7 @@ import { useModal, useChannels } from '../../../hooks/hooks';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useAddChannelMutation } from '../../../services/channelsApi.js';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
-import { filter }  from '../../../utils/FilterProvider.js';
+import { filter } from '../../../utils/FilterProvider.js';
 
 const AddChannelComponent = () => {
   const { t } = useTranslation();
@@ -17,8 +17,7 @@ const AddChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
-  //const filter = useFilter();
-
+  
   useEffect(() => {
     addChannelRef.current.focus();
   }, []);

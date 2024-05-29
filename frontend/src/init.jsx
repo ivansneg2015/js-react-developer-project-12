@@ -8,11 +8,10 @@ import App from './components/App';
 import resources from './locales/index.js';
 import socket from './socket.js';
 import Modal from './components/chatComponents/modals/Modal.jsx';
-import { addNewMessage } from './slices/messagesSlice';
+import { addNewMesage } from './slices/messagesSlice';
 import {
   addNewChannel, deleteChannel, renameChannel, selectCurrentChannel, selectDefaultChannel,
 } from './slices/channelsSlice.js';
-import { FilterProvider } from './utils/FilterProvider.js';
 
 const init = async () => {
   const i18n = i18next.createInstance();
@@ -26,7 +25,7 @@ const init = async () => {
     });
 
   socket.on('newMessage', (payload) => {
-    dispatch(addNewMessage(payload));
+    dispatch(addNewMesage(payload));
   });
 
   socket.on('newChannel', (payload) => {
@@ -64,10 +63,8 @@ const init = async () => {
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <FilterProvider>
-              <App />
-              <Modal />
-            </FilterProvider>
+            <App />
+            <Modal />
           </Provider>
         </I18nextProvider>
       </ErrorBoundary>

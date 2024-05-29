@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import notFoundImage from '../assets/404.jpg';
+
 const NotFoundPage = () => {
   const { t } = useTranslation();
 
@@ -9,8 +10,7 @@ const NotFoundPage = () => {
       <h1 className="h4 text-muted">{t('mainComponents.notFound')}</h1>
       <p className="text-muted">
         {t('mainComponents.but')}
-        {' '}
-        <a href="/">{t('mainComponents.toMainPage')}</a> {`./App.jsx`}
+        <a href="/">{t('mainComponents.toMainPage')}</a>
       </p>
     </div>
   );

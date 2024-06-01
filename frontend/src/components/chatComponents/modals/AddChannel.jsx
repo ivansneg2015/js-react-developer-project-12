@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -9,7 +9,7 @@ import { useModal, useChannels } from '../../../hooks/hooks';
 import { closeModal } from '../../../slices/modalSlice.js';
 import { useAddChannelMutation } from '../../../services/channelsApi.js';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
-import filter from '../../../utils/FilterProvider.js';
+import { useFilter } from '../../../utils/FilterProvider';
 
 const AddChannelComponent = () => {
   const { t } = useTranslation();
@@ -17,6 +17,7 @@ const AddChannelComponent = () => {
   const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
+  const filterFunction = useFilter();
 
   useEffect(() => {
     addChannelRef.current.focus();
@@ -40,7 +41,7 @@ const AddChannelComponent = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const clearedName = filter(values.channelName);
+        const clearedName = filterFunction(values.channelName);
         const newChannel = {
           body: { name: clearedName },
         };
@@ -57,7 +58,7 @@ const AddChannelComponent = () => {
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
       <Modal.Header closeButton>
-        <Modal.Title>{t('modals.addChannel')}</Modal.Title>
+        <Modal.Title h4="true">{t('modals.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -66,33 +67,24 @@ const AddChannelComponent = () => {
               className="mb-2"
               id="channelName"
               name="channelName"
+              required=""
               onChange={formik.handleChange}
               value={formik.values.channelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">
-              {t('modals.channelName')}
-            </Form.Label>
+            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.channelName}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
-              <Button
-                className="me-2"
-                variant="secondary"
-                type="button"
-                onClick={() => dispatch(closeModal())}
-              >
-                {t('cancel')}
-              </Button>
-              <Button variant="primary" type="submit">
-                {t('send')}
-              </Button>
+              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>
       </Modal.Body>
+
     </Modal>
   );
 };

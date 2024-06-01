@@ -13,3 +13,4 @@ export const SocketProvider = ({ children }) => {
 };
 
 export default socket;
+export { socket };

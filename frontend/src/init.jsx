@@ -58,20 +58,20 @@ const init = async () => {
     environment: 'production',
   };
 
-return (
-  <RollBar config={rollbarConfiguration}>
-    <ErrorBoundary>
-      <I18nextProvider i18n={i18n}>
-        <Provider store={store}>
-          <SocketProvider>
-            <App />
-            <Modal />
-          </SocketProvider>
-        </Provider>
-      </I18nextProvider>
-    </ErrorBoundary>
-  </RollBar>
-);
+  return (
+    <RollBar config={rollbarConfiguration}>
+      <ErrorBoundary>
+        <I18nextProvider i18n={i18n}>
+          <Provider store={store}>
+            <SocketProvider>
+              <App />
+              <Modal />
+            </SocketProvider>
+          </Provider>
+        </I18nextProvider>
+      </ErrorBoundary>
+    </RollBar>
+  );
 };
 
 export default init;

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import getModal from './index.js';
 import { closeModal } from '../../../slices/modalSlice.js';
+import { FilterProvider } from '../../../utils/FilterProvider';
 
 const Modal = () => {
   const { isOpen, type } = useSelector((state) => state.modal);
@@ -11,7 +12,11 @@ const Modal = () => {
   const ModalComponent = getModal(type);
 
   return (
-    ModalComponent ? <ModalComponent isOpen={isOpen} close={handleClose} /> : null
+    <FilterProvider>
+      {ModalComponent ? (
+        <ModalComponent isOpen={isOpen} close={handleClose} />
+      ) : null}
+    </FilterProvider>
   );
 };
 

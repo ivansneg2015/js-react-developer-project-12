@@ -61,4 +61,3 @@ const DataLoader = ({ children }) => {
 };
 
 export default DataLoader;
-

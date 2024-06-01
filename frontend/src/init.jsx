@@ -6,7 +6,7 @@ import { Provider as RollBar, ErrorBoundary } from '@rollbar/react';
 import store from './slices/index.js';
 import App from './components/App';
 import resources from './locales/index.js';
-import { socket } from './socket.js';
+import { socket, SocketProvider } from './socket.js';
 import Modal from './components/chatComponents/modals/Modal.jsx';
 import { addNewMesage } from './slices/messagesSlice';
 import {
@@ -58,18 +58,20 @@ const init = async () => {
     environment: 'production',
   };
 
-  return (
-    <RollBar config={rollbarConfiguration}>
-      <ErrorBoundary>
-        <I18nextProvider i18n={i18n}>
-          <Provider store={store}>
+return (
+  <RollBar config={rollbarConfiguration}>
+    <ErrorBoundary>
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <SocketProvider>
             <App />
             <Modal />
-          </Provider>
-        </I18nextProvider>
-      </ErrorBoundary>
-    </RollBar>
-  );
+          </SocketProvider>
+        </Provider>
+      </I18nextProvider>
+    </ErrorBoundary>
+  </RollBar>
+);
 };
 
 export default init;

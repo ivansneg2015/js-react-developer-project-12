@@ -6,7 +6,7 @@ import { Provider as RollBar, ErrorBoundary } from '@rollbar/react';
 import store from './slices/index.js';
 import App from './components/App';
 import resources from './locales/index.js';
-import socket from './socket.js';
+import { socket } from './socket.js';
 import Modal from './components/chatComponents/modals/Modal.jsx';
 import { addNewMesage } from './slices/messagesSlice';
 import {

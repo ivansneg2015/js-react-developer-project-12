@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { createContext } from 'react';
 
-const socket = io();
+export const socket = io();
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
@@ -11,6 +11,3 @@ export const SocketProvider = ({ children }) => {
     </SocketContext.Provider>
   );
 };
-
-export default socket;
-export { socket };

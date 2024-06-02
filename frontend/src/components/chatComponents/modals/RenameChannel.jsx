@@ -21,9 +21,7 @@ const RenameChannelComponent = () => {
   const dispatch = useDispatch();
   const addChannelRef = useRef();
 
-  const [initialValues, setInitialValues] = useState({
-    channelName: '',
-  });
+  const [initialValues, setInitialValues] = useState({ channelName: '' });
 
   useEffect(() => {
     if (selectedChannel) {
@@ -32,8 +30,10 @@ const RenameChannelComponent = () => {
   }, [selectedChannel]);
 
   useEffect(() => {
-    addChannelRef.current.focus();
-  }, []);
+    if (addChannelRef.current) {
+      addChannelRef.current.focus();
+    }
+  }, [initialValues]);
 
   const [editChannel] = useEditChannelMutation();
 
@@ -60,11 +60,10 @@ const RenameChannelComponent = () => {
         await editChannel(newChannel).unwrap();
         dispatch(closeModal());
         if (selectedChannel.currentChannelId.toString() === modal.id) {
-          dispatch(
-            selectCurrentChannel(
-              { id: selectedChannel.currentChannelId, name: values.channelName },
-            ),
-          );
+          dispatch(selectCurrentChannel({
+            id: selectedChannel.currentChannelId,
+            name: values.channelName
+          }));
         }
         toast.success(t('toastify.renameChannel'));
       } catch (e) {
@@ -88,19 +87,29 @@ const RenameChannelComponent = () => {
               required
               onChange={formik.handleChange}
               value={formik.values.channelName}
-              defaultValue={initialValues.channelName}
               isInvalid={!!formik.errors.channelName}
               ref={addChannelRef}
               autoFocus
               onFocus={(e) => e.target.select()}
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
+            <Form.Label htmlFor="channelName" className="visually-hidden">
+              {t('modals.channelName')}
+            </Form.Label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.channelName}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
-              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
+              <Button
+                className="me-2"
+                variant="secondary"
+                type="button"
+                onClick={() => dispatch(closeModal())}
+              >
+                {t('cancel')}
+              </Button>
+              <Button variant="primary" type="submit">
+                {t('send')}
+              </Button>
             </div>
           </Form.Group>
         </Form>

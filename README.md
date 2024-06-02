@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a761f1869fa461dcc5b4/maintainability)](https://codeclimate.com/github/IVANn84/frontend-project-12/maintainability)
 
 ### Example using Application:
-[Project Chat link](https://slack-project-85e7.onrender.com)
+[Project Chat link](https://frontend-project-12-njkc.onrender.com)
 
 # Chat Hexlet:
 

@@ -1,19 +1,35 @@
-import React, { useRef, useEffect } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useRef, useEffect, useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Modal, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import leoProfanity from 'leo-profanity';
-import { closeModal } from '../../../slices/modalSlice.js';
+import {
+  useModal, useChannels, useSelectedChannel,
+} from '../../../hooks/hooks';
 import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
+import { closeModal } from '../../../slices/modalSlice.js';
 import { useEditChannelMutation } from '../../../services/channelsApi.js';
 
-const RenameChannelComponent = ({ modal, selectedChannel, channels }) => {
+const RenameChannelComponent = () => {
   const { t } = useTranslation();
+  const modal = useModal();
+  const selectedChannel = useSelectedChannel();
+  const channels = useChannels();
   const dispatch = useDispatch();
   const addChannelRef = useRef();
+
+  const [initialValues, setInitialValues] = useState({
+    channelName: '',
+  });
+
+  useEffect(() => {
+    if (selectedChannel) {
+      setInitialValues({ channelName: selectedChannel.name });
+    }
+  }, [selectedChannel]);
 
   useEffect(() => {
     addChannelRef.current.focus();
@@ -21,78 +37,74 @@ const RenameChannelComponent = ({ modal, selectedChannel, channels }) => {
 
   const [editChannel] = useEditChannelMutation();
 
-  const channelsNames = channels.map((channel) => channel.name);
+  const channelsNames = channels.data.map((channel) => channel.name);
 
-  const validationSchema = Yup.object().shape({
-    channelName: Yup.string()
-      .trim()
-      .required(t('yup.required'))
-      .min(3, t('yup.minAndMax'))
-      .max(20, t('yup.minAndMax'))
-      .notOneOf(channelsNames, t('yup.notOneOf')),
-  });
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      const clearedName = leoProfanity.clean(values.channelName);
-      const newChannel = {
-        id: modal.id,
-        body: { name: clearedName },
-      };
-      await editChannel(newChannel).unwrap();
-      dispatch(closeModal());
-      if (selectedChannel.currentChannelId.toString() === modal.id) {
-        dispatch(
-          selectCurrentChannel({
-            id: selectedChannel.currentChannelId,
-            name: values.channelName,
-          })
-        );
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    validationSchema: yup.object({
+      channelName: yup.string()
+        .trim()
+        .required(t('yup.required'))
+        .min(3, t('yup.minAndMax'))
+        .max(20, t('yup.minAndMax'))
+        .notOneOf([...channelsNames], t('yup.notOneOf')),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const clearedName = leoProfanity.clean(values.channelName);
+        const newChannel = {
+          id: modal.id,
+          body: { name: clearedName },
+        };
+        await editChannel(newChannel).unwrap();
+        dispatch(closeModal());
+        if (selectedChannel.currentChannelId.toString() === modal.id) {
+          dispatch(
+            selectCurrentChannel(
+              { id: selectedChannel.currentChannelId, name: values.channelName },
+            ),
+          );
+        }
+        toast.success(t('toastify.renameChannel'));
+      } catch (e) {
+        toast.error(t('toastify.loadingError'));
       }
-      toast.success(t('toastify.renameChannel'));
-    } catch (error) {
-      toast.error(t('toastify.loadingError'));
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    },
+  });
 
   return (
     <Modal centered show={modal.isOpen} onHide={() => dispatch(closeModal())}>
       <Modal.Header closeButton>
-        <Modal.Title h4="true">{t('modals.renameChannel')}</Modal.Title>
+        <Modal.Title>{t('modals.renameChannel')}</Modal.Title>
       </Modal.Header>
-      <Formik
-        initialValues={{ channelName: selectedChannel.name }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <Modal.Body>
-              <Field
-                className="mb-2"
-                id="channelName"
-                name="channelName"
-                required=""
-                ref={addChannelRef}
-                autoFocus
-                onFocus={(e) => e.target.select()}
-                as="input"
-              />
-              <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
-              <div className="d-flex justify-content-end">
-                <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>
-                  {t('cancel')}
-                </Button>
-                <Button variant="primary" type="submit" disabled={isSubmitting}>
-                  {t('send')}
-                </Button>
-              </div>
-            </Modal.Body>
-          </Form>
-        )}
-      </Formik>
+      <Modal.Body>
+        <Form onSubmit={formik.handleSubmit}>
+          <Form.Group>
+            <Form.Control
+              className="mb-2"
+              id="channelName"
+              name="channelName"
+              required
+              onChange={formik.handleChange}
+              value={formik.values.channelName}
+              defaultValue={initialValues.channelName}
+              isInvalid={!!formik.errors.channelName}
+              ref={addChannelRef}
+              autoFocus
+              onFocus={(e) => e.target.select()}
+            />
+            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.channelName}
+            </Form.Control.Feedback>
+            <div className="d-flex justify-content-end">
+              <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
+            </div>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
     </Modal>
   );
 };

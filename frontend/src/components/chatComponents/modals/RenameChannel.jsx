@@ -62,7 +62,7 @@ const RenameChannelComponent = () => {
         if (selectedChannel.currentChannelId.toString() === modal.id) {
           dispatch(selectCurrentChannel({
             id: selectedChannel.currentChannelId,
-            name: values.channelName
+            name: values.channelName,
           }));
         }
         toast.success(t('toastify.renameChannel'));

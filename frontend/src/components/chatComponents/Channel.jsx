@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -20,16 +19,14 @@ const Channel = ({ data }) => {
     messageEnd.scrollIntoView();
   };
 
-  const buttonClass = Number(id) !== selectedChannel.currentChannelId
-    ? 'w-100 rounded-0 text-start btn'
-    : 'w-100 rounded-0 text-start btn btn-secondary';
+  const buttonClass = `w-100 rounded-0 text-start text-truncate btn ${Number(id) !== selectedChannel.currentChannelId ? 'btn-secondary' : ''}`;
 
   if (!removable) {
     return (
       <li id={id} className="nav-item w-100">
-        <button 
-          onClick={() => selectChannel(data)} 
-          type="button" 
+        <button
+          onClick={() => selectChannel(data)}
+          type="button"
           className={buttonClass}
         >
           <span className="me-1">#</span>
@@ -43,16 +40,16 @@ const Channel = ({ data }) => {
     <li id={id} className="nav-item w-100">
       {getModalComponent(modal.type)}
       <Dropdown className="d-flex btn-group" as={ButtonGroup}>
-        <button 
-          onClick={() => selectChannel(data)} 
-          className={`${buttonClass} text-truncate`} 
+        <button
+          onClick={() => selectChannel(data)}
+          className={buttonClass}
           type="button"
         >
           <span className="me-1">#</span>
           {name}
         </button>
-        <Dropdown.Toggle 
-          variant={Number(id) !== selectedChannel.currentChannelId ? 'light' : 'secondary'} 
+        <Dropdown.Toggle
+          variant={Number(id) !== selectedChannel.currentChannelId ? 'light' : 'secondary'}
           className="flex-grow-0 dropdown-toggle-split"
         >
           <span className="visually-hidden">

@@ -45,7 +45,7 @@ const Channel = ({ data }) => {
       <Dropdown className="d-flex btn-group" as={ButtonGroup}>
         <button
           onClick={() => selectChannel(data)}
-          className={`${buttonClass} text-truncate`}
+          className={`text-truncate ${buttonClass}`}
           type="button"
         >
           <span className="me-1">#</span>

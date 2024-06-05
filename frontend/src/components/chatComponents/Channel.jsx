@@ -27,9 +27,9 @@ const Channel = ({ data }) => {
   if (!removable) {
     return (
       <li id={id} className="nav-item w-100">
-        <button
-          onClick={() => selectChannel(data)}
-          type="button"
+        <button 
+          onClick={() => selectChannel(data)} 
+          type="button" 
           className={buttonClass}
         >
           <span className="me-1">#</span>
@@ -43,16 +43,16 @@ const Channel = ({ data }) => {
     <li id={id} className="nav-item w-100">
       {getModalComponent(modal.type)}
       <Dropdown className="d-flex btn-group" as={ButtonGroup}>
-        <button
-          onClick={() => selectChannel(data)}
-          className={`text-truncate ${buttonClass}`}
+        <button 
+          onClick={() => selectChannel(data)} 
+          className={`${buttonClass} text-truncate`} 
           type="button"
         >
           <span className="me-1">#</span>
           {name}
         </button>
-        <Dropdown.Toggle
-          variant={Number(id) !== selectedChannel.currentChannelId ? 'light' : 'secondary'}
+        <Dropdown.Toggle 
+          variant={Number(id) !== selectedChannel.currentChannelId ? 'light' : 'secondary'} 
           className="flex-grow-0 dropdown-toggle-split"
         >
           <span className="visually-hidden">

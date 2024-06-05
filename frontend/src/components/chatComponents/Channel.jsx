@@ -37,7 +37,7 @@ const Channel = ({ data }) => {
       <button
         onClick={() => selectChannel(data)}
         type="button"
-        className={`w-100 rounded-0 text-start btn ${Number(id) !== selectedChannel.currentChannelId ? '' : 'btn-secondary'}`}
+        className={`w-100 rounded-0 text-start ${Number(id) !== selectedChannel.currentChannelId ? '' : 'text-truncate btn btn-secondary'}`}
       >
           <span className="me-1">#</span>
           {name}

@@ -1,8 +1,8 @@
 import React from 'react';
 import ChannelsComponent from './ChannelsComponent.jsx';
 import MessagesComponent from './MessagesComponent.jsx';
-import DataLoader from '../../utils/DataLoader.js';
-import CheckTokenPage from '../../utils/CheckTokenPage.js';
+import DataLoader from './DataLoader.js';
+import CheckTokenPage from './CheckTokenPage.js';
 
 const ChatPage = () => (
   <CheckTokenPage>

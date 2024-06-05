@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { useGetChannelsQuery } from '../services/channelsApi.js';
-import { useGetMessagesQuery } from '../services/messagesApi.js';
-import { addChannelData } from '../slices/channelsSlice.js';
-import { addMessageData } from '../slices/messagesSlice.js';
-import { logOut } from '../slices/authSlice.js';
-import getPath from '../routes.js';
+import { useGetChannelsQuery } from '../../services/channelsApi.js';
+import { useGetMessagesQuery } from '../../services/messagesApi.js';
+import { addChannelData } from '../../slices/channelsSlice.js';
+import { addMessageData } from '../../slices/messagesSlice.js';
+import { logOut } from '../../slices/authSlice.js';
+import getPath from '../../routes.js';
 
 const DataLoader = ({ children }) => {
   const { t } = useTranslation();

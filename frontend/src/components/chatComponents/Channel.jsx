@@ -34,7 +34,11 @@ const Channel = ({ data }) => {
     <li id={id} className="nav-item w-100">
       {getModalComponent(modal.type)}
       <Dropdown className="d-flex btn-group" as={ButtonGroup}>
-        <button onClick={() => selectChannel(data)} className={Number(id) !== selectedChannel.currentChannelId ? 'w-100 rounded-0 text-start text-truncate btn' : 'w-100 rounded-0 text-start text-truncate btn btn-secondary'} type="button">
+      <button
+        onClick={() => selectChannel(data)}
+        type="button"
+        className={`w-100 rounded-0 text-start btn ${Number(id) !== selectedChannel.currentChannelId ? '' : 'btn-secondary'}`}
+      >
           <span className="me-1">#</span>
           {name}
         </button>

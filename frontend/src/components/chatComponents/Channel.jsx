@@ -39,24 +39,20 @@ const Channel = ({ data }) => {
     );
   }
 
-  const dropdownToggleClass = Number(id) !== selectedChannel.currentChannelId
-    ? 'light'
-    : 'secondary';
-
   return (
     <li id={id} className="nav-item w-100">
       {getModalComponent(modal.type)}
       <Dropdown className="d-flex btn-group" as={ButtonGroup}>
         <button
           onClick={() => selectChannel(data)}
-          type="button"
           className={`${buttonClass} text-truncate`}
+          type="button"
         >
           <span className="me-1">#</span>
           {name}
         </button>
         <Dropdown.Toggle
-          variant={dropdownToggleClass}
+          variant={Number(id) !== selectedChannel.currentChannelId ? 'light' : 'secondary'}
           className="flex-grow-0 dropdown-toggle-split"
         >
           <span className="visually-hidden">
@@ -64,14 +60,10 @@ const Channel = ({ data }) => {
           </span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item
-            onClick={() => dispatch(openModal({ type: 'removeChannel', id }))}
-          >
+          <Dropdown.Item onClick={() => dispatch(openModal({ type: 'removeChannel', id }))}>
             {t('delete')}
           </Dropdown.Item>
-          <Dropdown.Item
-            onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}
-          >
+          <Dropdown.Item onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}>
             {t('rename')}
           </Dropdown.Item>
         </Dropdown.Menu>

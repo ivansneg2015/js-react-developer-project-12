@@ -15,8 +15,8 @@ const Channel = ({ data }) => {
   const selectedChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const selectChannel = async (channel) => {
-    const messageEnd = document.getElementById('messageEnd');
     await dispatch(selectCurrentChannel(channel));
+    const messageEnd = document.getElementById('messageEnd');
     if (messageEnd) {
       messageEnd.scrollIntoView({ behavior: 'smooth' });
     }

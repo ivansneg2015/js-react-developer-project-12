@@ -30,7 +30,7 @@ const ChannelsComponent = () => {
     if (channelsEndRef.current) {
       channelsEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [channels.data.length, selectedChannelId]);
+  }, [selectedChannelId]);
 
   if (isLoading) {
     return (

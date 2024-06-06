@@ -79,12 +79,11 @@ const AddChannelComponent = () => {
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
+              <Button variant="primary" type="submit">{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>
       </Modal.Body>
-
     </Modal>
   );
 };

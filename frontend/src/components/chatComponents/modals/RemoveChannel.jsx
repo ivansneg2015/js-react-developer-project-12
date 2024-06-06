@@ -1,5 +1,5 @@
 import { Modal, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useModal, useAuth, useSelectedChannel } from '../../../hooks/hooks';
@@ -13,6 +13,7 @@ const RemoveChannelComponent = () => {
   const auth = useAuth();
   const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
+  const defaultChannelId = useSelector((state) => state.channels.defaultChannelId);
 
   const [removeChannel] = useRemoveChannelMutation();
 
@@ -22,7 +23,11 @@ const RemoveChannelComponent = () => {
     await removeChannel(channel)
       .then(() => {
         if (selectedChannel.currentChannelId.toString() === modal.id) {
-          dispatch(selectDefaultChannel());
+          dispatch(selectDefaultChannel(defaultChannelId));
+          const messageEnd = document.getElementById('messageEnd');
+          if (messageEnd) {
+            messageEnd.scrollIntoView({ behavior: 'smooth' });
+          }
         }
         dispatch(closeModal());
         toast.success(t('toastify.removeChannel'));

@@ -1,10 +1,10 @@
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSelectedChannel, useModal } from '../../hooks/hooks.js';
-import { selectCurrentChannel, selectDefaultChannel } from '../../slices/channelsSlice.js';
-import getModalComponent from './modals/index.js';
-import { openModal } from '../../slices/modalSlice.js';
+import { useSelectedChannel, useModal } from '../../hooks/hooks';
+import { selectCurrentChannel, selectDefaultChannel } from '../../slices/channelsSlice';
+import getModalComponent from './modals';
+import { openModal } from '../../slices/modalSlice';
 
 const Channel = ({ data }) => {
   const { t } = useTranslation();
@@ -12,7 +12,7 @@ const Channel = ({ data }) => {
   const modal = useModal();
   const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
-  const selectedChannelId = useSelector((state) => state.channels.currentChannelId);
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannel.currentChannelId);
 
   const selectChannel = async (channel) => {
     await dispatch(selectCurrentChannel(channel));
@@ -77,14 +77,10 @@ const Channel = ({ data }) => {
           </span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item
-            onClick={handleRemoveChannel}
-          >
+          <Dropdown.Item onClick={handleRemoveChannel}>
             {t('delete')}
           </Dropdown.Item>
-          <Dropdown.Item
-            onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}
-          >
+          <Dropdown.Item onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}>
             {t('rename')}
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -94,4 +90,5 @@ const Channel = ({ data }) => {
 };
 
 export default Channel;
+
 

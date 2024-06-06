@@ -3,21 +3,19 @@ import { BsPlusSquare } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { useGetChannelsQuery } from '../../services/channelsApi.js';
-import { useModal, useChannels } from '../../hooks/hooks.js';
-import { addChannelData } from '../../slices/channelsSlice.js';
-import Channel from './Channel.jsx';
-import getModalComponent from './modals/index.js';
-import { openModal } from '../../slices/modalSlice.js';
+import { useGetChannelsQuery } from '../../services/channelsApi';
+import { addChannelData } from '../../slices/channelsSlice';
+import Channel from './Channel';
+import getModalComponent from './modals';
+import { openModal } from '../../slices/modalSlice';
 
 const ChannelsComponent = () => {
   const { t } = useTranslation();
-  const modal = useModal();
-  const channels = useChannels();
+  const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const { data, error, isLoading } = useGetChannelsQuery();
-  const selectedChannelId = useSelector((state) => state.channels.currentChannelId);
-
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannel.currentChannelId);
+  
   const channelsEndRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const ChannelsComponent = () => {
     if (channelsEndRef.current) {
       channelsEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [channels.data.length]);
+  }, [selectedChannelId]);
 
   if (isLoading) {
     return (
@@ -60,7 +58,7 @@ const ChannelsComponent = () => {
         </button>
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-        {channels.data.map((channel) => <Channel key={channel.id} data={channel} />)}
+        {data && data.map((channel) => <Channel key={channel.id} data={channel} />)}
         <div ref={channelsEndRef} />
       </ul>
     </div>
@@ -68,4 +66,5 @@ const ChannelsComponent = () => {
 };
 
 export default ChannelsComponent;
+
 

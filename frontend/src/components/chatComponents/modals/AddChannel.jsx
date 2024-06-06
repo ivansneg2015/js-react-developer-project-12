@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useModal, useChannels } from '../../../hooks/hooks';
-import { closeModal } from '../../../slices/modalSlice.js';
-import { useAddChannelMutation } from '../../../services/channelsApi.js';
-import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
+import { closeModal } from '../../../slices/modalSlice';
+import { useAddChannelMutation } from '../../../services/channelsApi';
+import { selectCurrentChannel } from '../../../slices/channelsSlice';
 import { useFilter } from '../../../utils/FilterProvider';
 
 const AddChannelComponent = () => {
@@ -48,6 +48,10 @@ const AddChannelComponent = () => {
         const response = await AddChannel(newChannel);
         dispatch(closeModal());
         dispatch(selectCurrentChannel({ id: response.data.id, name: response.data.name }));
+        const channelsEndRef = document.getElementById('channels-box').lastElementChild;
+        if (channelsEndRef) {
+          channelsEndRef.scrollIntoView({ behavior: 'smooth' });
+        }
         toast.success(t('toastify.addChannel'));
       } catch (e) {
         toast.error(t('toastify.loadingError'));

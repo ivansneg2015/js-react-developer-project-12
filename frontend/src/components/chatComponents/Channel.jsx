@@ -1,5 +1,5 @@
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSelectedChannel, useModal } from '../../hooks/hooks.js';
 import { selectCurrentChannel, selectDefaultChannel } from '../../slices/channelsSlice.js';
@@ -12,15 +12,18 @@ const Channel = ({ data }) => {
   const modal = useModal();
   const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
+  const selectedChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const selectChannel = async (channel) => {
     const messageEnd = document.getElementById('messageEnd');
     await dispatch(selectCurrentChannel(channel));
-    messageEnd.scrollIntoView();
+    if (messageEnd) {
+      messageEnd.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleRemoveChannel = () => {
-    if (selectedChannel.currentChannelId === id) {
+    if (selectedChannelId === id) {
       dispatch(selectDefaultChannel());
     }
     dispatch(openModal({ type: 'removeChannel', id }));
@@ -33,7 +36,7 @@ const Channel = ({ data }) => {
           onClick={() => selectChannel(data)}
           type="button"
           className={
-            Number(id) !== selectedChannel.currentChannelId
+            Number(id) !== selectedChannelId
               ? 'w-100 rounded-0 text-start btn'
               : 'w-100 rounded-0 text-start btn btn-secondary'
           }
@@ -52,7 +55,7 @@ const Channel = ({ data }) => {
         <button
           onClick={() => selectChannel(data)}
           className={`w-100 rounded-0 text-start ${
-            Number(id) !== selectedChannel.currentChannelId
+            Number(id) !== selectedChannelId
               ? ''
               : 'text-truncate btn btn-secondary'
           }`}
@@ -63,7 +66,7 @@ const Channel = ({ data }) => {
         </button>
         <Dropdown.Toggle
           variant={
-            Number(id) !== selectedChannel.currentChannelId
+            Number(id) !== selectedChannelId
               ? 'light'
               : 'secondary'
           }

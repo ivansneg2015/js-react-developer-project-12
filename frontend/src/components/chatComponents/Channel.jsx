@@ -2,7 +2,7 @@ import { Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSelectedChannel, useModal } from '../../hooks/hooks.js';
-import { selectCurrentChannel } from '../../slices/channelsSlice.js';
+import { selectCurrentChannel, selectDefaultChannel } from '../../slices/channelsSlice.js';
 import getModalComponent from './modals/index.js';
 import { openModal } from '../../slices/modalSlice.js';
 
@@ -17,6 +17,13 @@ const Channel = ({ data }) => {
     const messageEnd = document.getElementById('messageEnd');
     await dispatch(selectCurrentChannel(channel));
     messageEnd.scrollIntoView();
+  };
+
+  const handleRemoveChannel = () => {
+    if (selectedChannel.currentChannelId === id) {
+      dispatch(selectDefaultChannel());
+    }
+    dispatch(openModal({ type: 'removeChannel', id }));
   };
 
   if (!removable) {
@@ -68,7 +75,7 @@ const Channel = ({ data }) => {
         </Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item
-            onClick={() => dispatch(openModal({ type: 'removeChannel', id }))}
+            onClick={handleRemoveChannel}
           >
             {t('delete')}
           </Dropdown.Item>

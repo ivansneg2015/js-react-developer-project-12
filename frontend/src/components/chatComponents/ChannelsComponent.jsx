@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BsPlusSquare } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useGetChannelsQuery } from '../../services/channelsApi.js';
-import { useModal, useChannels } from '../../hooks/hooks.js';
-import { addChannelData } from '../../slices/channelsSlice.js';
+import { useModal, useChannels, useSelectedChannel } from '../../hooks/hooks.js';
+import { addChannelData, selectDefaultChannel } from '../../slices/channelsSlice.js';
 import Channel from './Channel.jsx';
 import getModalComponent from './modals/index.js';
 import { openModal } from '../../slices/modalSlice.js';
@@ -14,18 +14,23 @@ const ChannelsComponent = () => {
   const { t } = useTranslation();
   const modal = useModal();
   const channels = useChannels();
+  const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
-  const {
-    data,
-    error,
-    isLoading,
-  } = useGetChannelsQuery();
+  const { data, error, isLoading } = useGetChannelsQuery();
+
+  const channelsEndRef = useRef(null);
 
   useEffect(() => {
     if (data) {
       dispatch(addChannelData(data));
     }
-  }, [isLoading, data, dispatch]);
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    if (channelsEndRef.current) {
+      channelsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [channels.data.length]);
 
   if (isLoading) {
     return (
@@ -56,6 +61,7 @@ const ChannelsComponent = () => {
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.data.map((channel) => <Channel key={channel.id} data={channel} />)}
+        <div ref={channelsEndRef} />
       </ul>
     </div>
   );

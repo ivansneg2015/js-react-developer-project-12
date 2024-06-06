@@ -1,34 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { BsPlusSquare } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { useGetChannelsQuery } from '../../services/channelsApi';
-import { addChannelData } from '../../slices/channelsSlice';
-import Channel from './Channel';
-import getModalComponent from './modals';
-import { openModal } from '../../slices/modalSlice';
+import { useGetChannelsQuery } from '../../services/channelsApi.js';
+import { useModal, useChannels } from '../../hooks/hooks.js';
+import { addChannelData } from '../../slices/channelsSlice.js';
+import Channel from './Channel.jsx';
+import getModalComponent from './modals/index.js';
+import { openModal } from '../../slices/modalSlice.js';
 
 const ChannelsComponent = () => {
   const { t } = useTranslation();
-  const modal = useSelector((state) => state.modal);
+  const modal = useModal();
+  const channels = useChannels();
   const dispatch = useDispatch();
-  const { data, error, isLoading } = useGetChannelsQuery();
-  const selectedChannelId = useSelector((state) => state.channels.selectedChannel.currentChannelId);
-  
-  const channelsEndRef = useRef(null);
+  const {
+    data,
+    error,
+    isLoading,
+  } = useGetChannelsQuery();
 
   useEffect(() => {
     if (data) {
       dispatch(addChannelData(data));
     }
-  }, [data, dispatch]);
-
-  useEffect(() => {
-    if (channelsEndRef.current) {
-      channelsEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [selectedChannelId]);
+  }, [isLoading, data, dispatch]);
 
   if (isLoading) {
     return (
@@ -58,13 +55,10 @@ const ChannelsComponent = () => {
         </button>
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-        {data && data.map((channel) => <Channel key={channel.id} data={channel} />)}
-        <div ref={channelsEndRef} />
+        {channels.data.map((channel) => <Channel key={channel.id} data={channel} />)}
       </ul>
     </div>
   );
 };
 
 export default ChannelsComponent;
-
-

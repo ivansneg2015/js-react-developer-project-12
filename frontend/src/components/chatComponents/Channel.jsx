@@ -1,10 +1,10 @@
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSelectedChannel, useModal } from '../../hooks/hooks';
-import { selectCurrentChannel, selectDefaultChannel } from '../../slices/channelsSlice';
-import getModalComponent from './modals';
-import { openModal } from '../../slices/modalSlice';
+import { useSelectedChannel, useModal } from '../../hooks/hooks.js';
+import { selectCurrentChannel } from '../../slices/channelsSlice.js';
+import getModalComponent from './modals/index.js';
+import { openModal } from '../../slices/modalSlice.js';
 
 const Channel = ({ data }) => {
   const { t } = useTranslation();
@@ -12,21 +12,11 @@ const Channel = ({ data }) => {
   const modal = useModal();
   const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
-  const selectedChannelId = useSelector((state) => state.channels.selectedChannel.currentChannelId);
 
   const selectChannel = async (channel) => {
-    await dispatch(selectCurrentChannel(channel));
     const messageEnd = document.getElementById('messageEnd');
-    if (messageEnd) {
-      messageEnd.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleRemoveChannel = () => {
-    if (selectedChannelId === id) {
-      dispatch(selectDefaultChannel());
-    }
-    dispatch(openModal({ type: 'removeChannel', id }));
+    await dispatch(selectCurrentChannel(channel));
+    messageEnd.scrollIntoView();
   };
 
   if (!removable) {
@@ -36,7 +26,7 @@ const Channel = ({ data }) => {
           onClick={() => selectChannel(data)}
           type="button"
           className={
-            Number(id) !== selectedChannelId
+            Number(id) !== selectedChannel.currentChannelId
               ? 'w-100 rounded-0 text-start btn'
               : 'w-100 rounded-0 text-start btn btn-secondary'
           }
@@ -55,7 +45,7 @@ const Channel = ({ data }) => {
         <button
           onClick={() => selectChannel(data)}
           className={`w-100 rounded-0 text-start ${
-            Number(id) !== selectedChannelId
+            Number(id) !== selectedChannel.currentChannelId
               ? ''
               : 'text-truncate btn btn-secondary'
           }`}
@@ -66,7 +56,7 @@ const Channel = ({ data }) => {
         </button>
         <Dropdown.Toggle
           variant={
-            Number(id) !== selectedChannelId
+            Number(id) !== selectedChannel.currentChannelId
               ? 'light'
               : 'secondary'
           }
@@ -77,10 +67,14 @@ const Channel = ({ data }) => {
           </span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item onClick={handleRemoveChannel}>
+          <Dropdown.Item
+            onClick={() => dispatch(openModal({ type: 'removeChannel', id }))}
+          >
             {t('delete')}
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}>
+          <Dropdown.Item
+            onClick={() => dispatch(openModal({ type: 'renameChannel', id }))}
+          >
             {t('rename')}
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -90,5 +84,3 @@ const Channel = ({ data }) => {
 };
 
 export default Channel;
-
-

@@ -1,11 +1,11 @@
 import { Modal, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useModal, useAuth, useSelectedChannel } from '../../../hooks/hooks';
-import { selectDefaultChannel } from '../../../slices/channelsSlice';
-import { closeModal } from '../../../slices/modalSlice';
-import { useRemoveChannelMutation } from '../../../services/channelsApi';
+import { selectDefaultChannel } from '../../../slices/channelsSlice.js';
+import { closeModal } from '../../../slices/modalSlice.js';
+import { useRemoveChannelMutation } from '../../../services/channelsApi.js';
 
 const RemoveChannelComponent = () => {
   const { t } = useTranslation();
@@ -13,7 +13,6 @@ const RemoveChannelComponent = () => {
   const auth = useAuth();
   const selectedChannel = useSelectedChannel();
   const dispatch = useDispatch();
-  const defaultChannelId = useSelector((state) => state.channels.defaultChannelId);
 
   const [removeChannel] = useRemoveChannelMutation();
 
@@ -24,10 +23,6 @@ const RemoveChannelComponent = () => {
       .then(() => {
         if (selectedChannel.currentChannelId.toString() === modal.id) {
           dispatch(selectDefaultChannel());
-          const channelsBox = document.getElementById('channels-box');
-          if (channelsBox) {
-            channelsBox.scrollTop = 0;
-          }
         }
         dispatch(closeModal());
         toast.success(t('toastify.removeChannel'));
@@ -60,4 +55,3 @@ const RemoveChannelComponent = () => {
 };
 
 export default RemoveChannelComponent;
-

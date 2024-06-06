@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useModal, useChannels } from '../../../hooks/hooks';
-import { closeModal } from '../../../slices/modalSlice';
-import { useAddChannelMutation } from '../../../services/channelsApi';
-import { selectCurrentChannel } from '../../../slices/channelsSlice';
+import { closeModal } from '../../../slices/modalSlice.js';
+import { useAddChannelMutation } from '../../../services/channelsApi.js';
+import { selectCurrentChannel } from '../../../slices/channelsSlice.js';
 import { useFilter } from '../../../utils/FilterProvider';
 
 const AddChannelComponent = () => {
@@ -48,10 +48,6 @@ const AddChannelComponent = () => {
         const response = await AddChannel(newChannel);
         dispatch(closeModal());
         dispatch(selectCurrentChannel({ id: response.data.id, name: response.data.name }));
-        const channelsEndRef = document.getElementById('channels-box').lastElementChild;
-        if (channelsEndRef) {
-          channelsEndRef.scrollIntoView({ behavior: 'smooth' });
-        }
         toast.success(t('toastify.addChannel'));
       } catch (e) {
         toast.error(t('toastify.loadingError'));
@@ -83,11 +79,12 @@ const AddChannelComponent = () => {
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button className="me-2" variant="secondary" type="button" onClick={() => dispatch(closeModal())}>{t('cancel')}</Button>
-              <Button variant="primary" type="submit">{t('send')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('send')}</Button>
             </div>
           </Form.Group>
         </Form>
       </Modal.Body>
+
     </Modal>
   );
 };
